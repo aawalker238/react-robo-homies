@@ -3,6 +3,7 @@ import axios from 'axios';
 import './App.css';
 import SearchBox from '../SearchBox';
 import CardList from '../CardList';
+import ErrorBoundary from '../ErrorBoundary';
 
 class App extends Component {
   state = {
@@ -18,7 +19,6 @@ class App extends Component {
     await axios
       .get('https://jsonplaceholder.typicode.com/users')
       .then(({ data: robots }) => {
-        console.log(robots);
         this.setState({ robots, robotsFiltered: robots });
       })
       .catch(err => {
@@ -52,11 +52,13 @@ class App extends Component {
       <div className="tc">
         <h1 className="f1">Robo Homies</h1>
         <SearchBox handleInputChange={this.handleInputChange} />
-        <CardList
-          robotsFiltered={robotsFiltered}
-          fetchError={fetchError}
-          loading={loading}
-        />
+        <ErrorBoundary>
+          <CardList
+            robotsFiltered={robotsFiltered}
+            fetchError={fetchError}
+            loading={loading}
+          />
+        </ErrorBoundary>
       </div>
     );
   }
